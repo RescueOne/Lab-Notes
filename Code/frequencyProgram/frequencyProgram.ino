@@ -23,11 +23,18 @@ void loop()
   LCD.setCursor(0,0); LCD.print("Frequency");
   int waveIn;
   waveIn = digitalRead(0);
-  if (waveIn == HIGH) {
-     long time = micros();
+  double totalTime;
+  int iter = 10000;
+  int x;
+  for (x = 0; x < iter; x++) {
+     double timeStart = millis();
      while (waveIn == HIGH) {waveIn = digitalRead(0);}
-     LCD.setCursor(0,1);
-     LCD.print(time);
+     while (waveIn == LOW) {waveIn = digitalRead(0);}
+     double timeEnd = millis();
+     double time = timeEnd - timeStart;
+     double timeInSec = time / 1000;
+     totalTime += timeInSec;
   }
+  double averageTime = totalTime / iter;
+  LCD.setCursor(0,1); LCD.print(1/averageTime);
 }
-
