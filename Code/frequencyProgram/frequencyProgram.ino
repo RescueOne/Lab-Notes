@@ -32,9 +32,8 @@ void loop()
      while (waveIn == LOW) {waveIn = digitalRead(0);}
      double timeEnd = millis();
      double time = timeEnd - timeStart;
-     double timeInSec = time / 1000;
-     totalTime += timeInSec;
+     totalTime += time;
   }
   double averageTime = totalTime / iter;
-  LCD.setCursor(0,1); LCD.print(1/averageTime);
+  LCD.setCursor(0,1); LCD.print(1/(averageTime/1000));
 }
