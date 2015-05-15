@@ -26,7 +26,7 @@ void loop()
   //LCD.clear(); LCD.home();
   LCD.setCursor(0,0); LCD.print("Switch Test");
   if (digSwitch == HIGH) {
-    LCD.setCursor(0,1); LCD.print("Open");
+    LCD.setCursor(0,1); LCD.print("Opened");
   } else {
     LCD.setCursor(0,1); LCD.print("Closed");
   }
