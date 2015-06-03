@@ -1,8 +1,8 @@
 %Number of steps
-Nx = 50; %Number of steps in length
+Nx = 60; %Number of steps in length
 Nt = 100000; %Number of steps in time
 t0 = 0; %Start time (s)
-tf = 3000; %End time (s)
+tf = 6000; %End time (s)
 x0 = 0; %Start length (m)
 xf = 0.3; %End length (m)
 
@@ -30,7 +30,7 @@ dT = @(P) (P * dt)/(Cp * pi*a^2*dx*rho); %Temperature change in chunk (K)
 %==============
 
 %Constants
-Pinl = 10; %Power into the left side of the rod (W)
+Pinl = 5; %Power into the left side of the rod (W)
 
 %Storage
 T = zeros(Nx, Nt); %Array of temp over time, indices are (x,t)
@@ -45,17 +45,21 @@ for time = 1:Nt-1
     %temperature changes due to conduction
     %along rod
     T(2:Nx-1,time+1)=T(2:Nx-1,time)+(k/(Cp*rho))*((T(3:Nx,time)-2*T(2:Nx-1,time)+T(1:Nx-2,time))./dx^2)*dt;
+    T(Nx,time+1) = Tamb;
     
     %at beginning and end of rod
-    T(1,time+1)=T(1,time+1)-(k/(Cp*rho))*((T(3,time)-2*T(2,time)+T(1,time))./dx^2)*dt;
-    T(Nx,time+1)=T(Nx,time+1)-(k/(Cp*rho))*((T(Nx,time)-2*T(Nx-1,time)+T(Nx-2,time))./dx^2)*dt;   
+%     T(1,time+1)=T(1,time+1)-(k/(Cp*rho))*((T(3,time)-2*T(2,time)+T(1,time))./dx^2)*dt;
+%     T(Nx,time+1)=T(Nx,time)+(k/(Cp*rho))*((T(Nx,time)-2*T(Nx-1,time)+T(Nx-2,time))./dx^2)*dt;
+    T(1,time+1) = T(1,time+1) - sum(T(2:Nx,time+1)-T(2:Nx,time));
     
     %temperature changes due to loss in convection and radiation
     %along rod
     T(1:Nx,time+1)=T(1:Nx,time+1) - dT_convec(T(1:Nx,time+1)) - dT_rad(T(1:Nx,time+1));
     
-    %at cold end of rod
-    T(Nx,time+1)=T(Nx,time+1) - dT_convec_end(T(Nx,time+1)) - dT_rad_end(T(Nx,time+1));
+    %at cold and hot end of rod
+%     T(Nx,time+1)=T(Nx,time+1) - dT_convec_end(T(Nx,time+1)) - dT_rad_end(T(Nx,time+1));
+%     T(1,time+1)=T(1,time+1) - dT_convec_end(T(1,time+1)) - dT_rad_end(T(1,time+1));
+    
 end
 
 time = linspace(0,tf,Nt)/60;
@@ -64,5 +68,8 @@ for position = 1:Nx
     plot(time,T(position,:));
     hold on;
 end
+
+xlabel('Time (mins)');
+ylabel('Temp (K)');
 
 hold off;
