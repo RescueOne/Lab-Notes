@@ -1,16 +1,16 @@
 %Number of steps
-Nx = 60; %Number of steps in length
+Nx = 20; %Number of steps in length
 Nt = 100000; %Number of steps in time
 t0 = 0; %Start time (s)
-tf = 6000; %End time (s)
+tf = 2500; %End time (s)
 x0 = 0; %Start length (m)
 xf = 0.3; %End length (m)
 
 %Constants
-kc = 10; %Convection coefficient of horizontal Al rod (W/(m^2K))
+kc = 7; %Convection coefficient of horizontal Al rod (W/(m^2K))
 k = 205; %Constant of conductivity of Al (W/(mK))
 a = 0.01; %Radius of the rod (m)
-e = 0.95; %Emmisivity of rod
+e = 0.21; %Emmisivity of sandblasted Al rod
 SBc = 5.67e-8; %Stefan-Boltzmann constant (W/(m^2K^4))
 Tamb = 298; %Ambient temperature (K)
 Cp = 910; %Specific heat capacity of Al (J/(K kg))
@@ -30,7 +30,7 @@ dT = @(P) (P * dt)/(Cp * pi*a^2*dx*rho); %Temperature change in chunk (K)
 %==============
 
 %Constants
-Pinl = 5; %Power into the left side of the rod (W)
+Pinl = 12; %Power into the left side of the rod (W)
 
 %Storage
 T = zeros(Nx, Nt); %Array of temp over time, indices are (x,t)
@@ -45,7 +45,8 @@ for time = 1:Nt-1
     %temperature changes due to conduction
     %along rod
     T(2:Nx-1,time+1)=T(2:Nx-1,time)+(k/(Cp*rho))*((T(3:Nx,time)-2*T(2:Nx-1,time)+T(1:Nx-2,time))./dx^2)*dt;
-    T(Nx,time+1) = Tamb;
+    T(1,time+1) = T(1,time+1)+((k/(Cp*rho))*(T(2,time)-T(1,time+1))./dx^2)*dt;
+    T(Nx,time+1) = T(Nx,time)-((k/(Cp*rho))*(T(Nx,time)-T(Nx-1,time))./dx^2)*dt;
     
     %at beginning and end of rod
 %     T(1,time+1)=T(1,time+1)-(k/(Cp*rho))*((T(3,time)-2*T(2,time)+T(1,time))./dx^2)*dt;
@@ -57,8 +58,8 @@ for time = 1:Nt-1
     T(1:Nx,time+1)=T(1:Nx,time+1) - dT_convec(T(1:Nx,time+1)) - dT_rad(T(1:Nx,time+1));
     
     %at cold and hot end of rod
-%     T(Nx,time+1)=T(Nx,time+1) - dT_convec_end(T(Nx,time+1)) - dT_rad_end(T(Nx,time+1));
-%     T(1,time+1)=T(1,time+1) - dT_convec_end(T(1,time+1)) - dT_rad_end(T(1,time+1));
+    T(Nx,time+1)=T(Nx,time+1) - dT_convec_end(T(Nx,time+1)) - dT_rad_end(T(Nx,time+1));
+%    T(1,time+1)=T(1,time+1) - dT_convec_end(T(1,time+1)) - dT_rad_end(T(1,time+1));
     
 end
 
