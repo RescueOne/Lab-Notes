@@ -1,18 +1,18 @@
 %Number of steps
-Nx = 60; %Number of steps in length
-Nt = 100000; %Number of steps in time
+Nx = 30; %Number of steps in length
+Nt = 10000; %Number of steps in time
 t0 = 0; %Start time (s)
 tf = 2500; %End time (s)
 x0 = 0; %Start length (m)
 xf = 0.3; %End length (m)
 
 %Constants
-kc = 8; %Convection coefficient of horizontal Al rod (W/(m^2K))
-k = 160; %Constant of conductivity of Al (W/(mK))
+kc = 7; %Convection coefficient of horizontal Al rod (W/(m^2K))
+k = 200; %Constant of conductivity of Al (W/(mK))
 a = 0.011; %Radius of the rod (m)
-e = 1; %Emmisivity of sandblasted Al rod
+e = 0.3; %Emmisivity of sandblasted Al rod
 SBc = 5.67e-8; %Stefan-Boltzmann constant (W/(m^2K^4))
-Tamb = 298; %Ambient temperature (K)
+Tamb = 273+25; %Ambient temperature (K)
 Cp = 910; %Specific heat capacity of Al (J/(K kg))
 rho = 2.7e3; %Density of Al (kg/m^3)
 
@@ -30,13 +30,13 @@ dT = @(P) (P * dt)/(Cp * pi*a^2*dx*rho); %Temperature change in chunk (K)
 %==============
 
 %Constants
-Pinl = 12; %Power into the left side of the rod (W)
+Pinl = 10; %Power into the left side of the rod (W)
 
 %Storage
 T = zeros(Nx, Nt); %Array o temp over time, indices are (x,t)
 
 %initial
-T(:,1) = ones(Nx,1)*Tamb; %Set all temperatures to Tamb
+T(:,1) = ones(Nx,1)*(273+27); %Set all temperatures to Tamb
 
 for time = 1:Nt-1
     %power in to rod
@@ -45,8 +45,17 @@ for time = 1:Nt-1
     %temperature changes due to conduction
     %along rod
     T(2:Nx-1,time+1)=T(2:Nx-1,time)+(k/(Cp*rho))*((T(3:Nx,time)-2*T(2:Nx-1,time)+T(1:Nx-2,time))./dx^2)*dt;
-    T(1,time+1) = T(1,time+1)+((k/(Cp*rho))*(T(2,time)-T(1,time+1))./dx^2)*dt;
-    T(Nx,time+1) = T(Nx,time)-((k/(Cp*rho))*(T(Nx,time)-T(Nx-1,time))./dx^2)*dt;
+    
+    %Boundaries
+%     DerivP2 = (T(3,time)-2*T(2,time)+T(1,time+1))./dx^2;
+%     DerivP3 = (T(4,time)-2*T(3,time)+T(2,time))./dx^2;
+    DerivNx1 = (T(Nx-2,time)-2*T(Nx-1,time)+T(Nx,time))./dx^2;
+    DerivNx2 = (T(Nx-3,time)-2*T(Nx-2,time)+T(Nx-1,time))./dx^2;
+    
+%     T(1,time+1) = T(1,time+1) + (k/(Cp*rho))*(DerivP2 + (DerivP2 - DerivP3))*dt;
+%     T(Nx,time+1) = T(Nx,time) + (k/(Cp*rho))*(DerivNx1 + (DerivNx1 - DerivNx2))*dt;
+    T(Nx,time+1) = Tamb;
+    T(1,time+1) = T(1,time+1) - sum(T(2:Nx,time+1)-T(2:Nx,time));
     
     %temperature changes due to loss in convection and radiation
     %along rod
@@ -66,13 +75,14 @@ timeSim = linspace(0,tf,Nt);
 hold on;
 plot(timeSim,(T(1,:)-273));
 plot(timeSim,(T(Nx,:)-273));
-plot(timeSim,(T(20,:)-273));
-plot(timeSim,(T(40,:)-273));
+plot(timeSim,(T(floor(Nx/3),:)-273));
+plot(timeSim,(T(floor(2*Nx/3),:)-273));
 
 xlabel('Time (Seconds)');
 ylabel('Temp (C)');
 
 timeDATA = timeDATA(1:size(T1, 2));
 plot(timeDATA, T0, 'c', timeDATA, T1, 'y', timeDATA, T2, 'g', timeDATA, T3, 'r', timeDATA, T4, 'm')
+% axis([0 2500 20 80])
 
 hold off;
