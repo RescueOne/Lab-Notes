@@ -1,5 +1,6 @@
+function [Tbegin,Tend] = rodSim(Nx)
 %Number of steps
-Nx = 150; %Number of steps in length
+% Nx = 60; %Number of steps in length
 Nt = 100000; %Number of steps in time
 t0 = 0; %Start time (s)
 tf = 2500; %End time (s)
@@ -39,13 +40,12 @@ T = zeros(Nx, Nt); %Array o temp over time, indices are (x,t)
 T(:,1) = ones(Nx,1)*Tamb; %Set all temperatures to Tamb
 
 for time = 1:Nt-1
-    %power in to rod
-    T(1,time+1)=T(1,time)+dT(Pinl);
+    %power in to rod and out by conduction
+    T(1,time+1)=T(1,time)+dT(Pinl)+((k/(Cp*rho))*(T(2,time)-T(1,time))./dx^2)*dt;
     
     %temperature changes due to conduction
     %along rod
     T(2:Nx-1,time+1)=T(2:Nx-1,time)+(k/(Cp*rho))*((T(3:Nx,time)-2*T(2:Nx-1,time)+T(1:Nx-2,time))./dx^2)*dt;
-    T(1,time+1) = T(1,time+1)+((k/(Cp*rho))*(T(2,time)-T(1,time+1))./dx^2)*dt;
     T(Nx,time+1) = T(Nx,time)-((k/(Cp*rho))*(T(Nx,time)-T(Nx-1,time))./dx^2)*dt;
     
     %temperature changes due to loss in convection and radiation
@@ -55,24 +55,7 @@ for time = 1:Nt-1
     %at cold and hot end of rod
     T(Nx,time+1)=T(Nx,time+1) - dT_convec_end(T(Nx,time+1)) - dT_rad_end(T(Nx,time+1));
 end
-
-timeSim = linspace(0,tf,Nt);
-
-% for position = 1:Nx
-%     plot(timeSim,(T(position,:)-273));
-%     hold on;
-% end
-
-hold on;
-plot(timeSim,(T(1,:)-273));
-plot(timeSim,(T(Nx,:)-273));
-plot(timeSim,(T(20,:)-273));
-plot(timeSim,(T(40,:)-273));
-
-xlabel('Time (Seconds)');
-ylabel('Temp (C)');
-
-timeDATA = timeDATA(1:size(T1, 2));
-plot(timeDATA, T0, 'c', timeDATA, T1, 'y', timeDATA, T2, 'g', timeDATA, T3, 'r', timeDATA, T4, 'm')
-
-hold off;
+Tbegin = T(1,Nt);
+Tend = T(Nx,Nt);
+return;
+end
