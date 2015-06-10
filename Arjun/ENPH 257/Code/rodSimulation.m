@@ -75,6 +75,6 @@ xlabel('Time (Seconds)');
 ylabel('Temp (C)');
 
 timeDATA = timeDATA(1:size(T1, 2));
-plot(timeDATA, T0, 'c', timeDATA, T1, 'y', timeDATA, T2, 'g', timeDATA, T3, 'r', timeDATA, T4, 'm')
+plot(timeDATA, T1, 'c', timeDATA, T2, 'y', timeDATA, T3, 'g', timeDATA, T4, 'r', timeDATA, T5, 'm')
 
 hold off
