@@ -55,11 +55,23 @@ for time = 1:Nt-1
     T(Nx,time+1)=T(Nx,time+1) - dT_convec_end(T(Nx,time+1)) - dT_rad_end(T(Nx,time+1));
 end
 
-% Point trim
+
+% Point trim for data (to allow for time it takes to heat power resistor)
+notTrimmed = false; 
+if notTrimmed
+    l = length(T1);
+    numTrim = 4;
+    T1 = T1(numTrim:l);
+    T2 = T2(numTrim:l);
+    T3 = T3(numTrim:l);
+    T4 = T4(numTrim:l);
+    T5 = T5(numTrim:l);
+    timeDATA = timeDATA(1:length(T1));
+end
 
 timeSim = linspace(0,tf,Nt);
 
-% Plot of all points
+% Plot of all points of rod simulation
 % for position = 1:Nx
 %     plot(timeSim,(T(position,:)-273));
 %     hold on;
@@ -74,7 +86,40 @@ plot(timeSim,(T(floor(Nx*2/3),:)-273));
 xlabel('Time (Seconds)');
 ylabel('Temp (C)');
 
-timeDATA = timeDATA(1:size(T1, 2));
 plot(timeDATA, T1, 'c', timeDATA, T2, 'y', timeDATA, T3, 'g', timeDATA, T4, 'r', timeDATA, T5, 'm')
+
+% Calculate chai squared values
+X1 = zeros(1,length(timeDATA));
+X2 = zeros(1,length(timeDATA));
+X3 = zeros(1,length(timeDATA));
+X4 = zeros(1,length(timeDATA));
+T = T-273;
+for tindex = 1:length(timeDATA)
+   % Getting correct indices
+   tcur = timeDATA(tindex);
+   tmp = abs(timeSim-tcur);
+   [idx idx] = min(tmp); %index of closest value
+   TData1 = T1(tindex);
+   TSim1 = T(Nx,idx);
+   X1(tindex) = (TData1-TSim1)^2;
+   
+   TData2 = T2(tindex);
+   TSim2 = T(floor(Nx*2/3),idx);
+   X2(tindex) = (TData2-TSim2)^2;
+   
+   TData3 = T3(tindex);
+   TSim3 = T(floor(Nx/3),idx);
+   X3(tindex) = (TData3-TSim3)^2;
+   
+   TData4 = T4(tindex);
+   TSim4 = T(1,idx);
+   X4(tindex) = (TData4-TSim4)^2;
+end
+
+Xsquare1 = sum(X1)/length(X1)
+Xsquare2 = sum(X2)/length(X2)
+Xsquare3 = sum(X3)/length(X3)
+Xsquare4 = sum(X4)/length(X4)
+XsquareTot = (Xsquare1^2 + Xsquare2^2 + Xsquare3^2 + Xsquare4^2)/4
 
 hold off;
