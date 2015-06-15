@@ -1,19 +1,19 @@
 %Number of steps
-Nx = 60; %Number of steps in length
+Nx = 100; %Number of steps in length
 Nt = 100000; %Number of steps in time
 t0 = 0; %Start time (s)
-tf = 2500; %End time (s)
+tf = 2800; %End time (s)
 x0 = 0; %Start length (m)
 xf = 0.3; %End length (m)
 
 %Constants
 kc = 13.5; %Convection coefficient of horizontal Al rod (W/(m^2K))
-k = 180; %Constant of conductivity of Al (W/(mK))
+k = 160; %Constant of conductivity of Al (W/(mK))
 a = 0.011; %Radius of the rod (m)
 e = .21; %Emmisivity of sandblasted Al rod
 SBc = 5.67e-8; %Stefan-Boltzmann constant (W/(m^2K^4))
-Tamb = 298; %Ambient temperature (K)
-Cp = 860; %Specific heat capacity of Al (J/(K kg))
+Tamb = 298+7; %Ambient temperature (K)
+Cp = 850; %Specific heat capacity of Al (J/(K kg))
 rho = 2.7e3; %Density of Al (kg/m^3)
 
 %Calculated numbers
@@ -30,7 +30,7 @@ dT = @(P) (P * dt)/(Cp * pi*a^2*dx*rho); %Temperature change in chunk (K)
 %==============
 
 %Constants
-Pinl = 12; %Power into the left side of the rod (W)
+Pinl = 6.5; %Power into the left side of the rod (W)
 
 %Storage
 T = zeros(Nx, Nt); %Array o temp over time, indices are (x,t)
@@ -66,10 +66,8 @@ timeSim = linspace(0,tf,Nt);
 plot(timeSim,(T(1,:)-273));
 hold on
 plot(timeSim,(T(Nx,:)-273));
-% plot(timeSim,(T(floor(Nx/3),:)-273));
-% plot(timeSim,(T(floor(2*Nx/3),:)-273));
-plot(timeSim,(T(20,:)-273))
-plot(timeSim,(T(40,:)-273));
+plot(timeSim,(T(floor(Nx/3),:)-273));
+plot(timeSim,(T(floor(Nx*2/3),:)-273));
 
 xlabel('Time (Seconds)');
 ylabel('Temp (C)');
@@ -77,4 +75,4 @@ ylabel('Temp (C)');
 timeDATA = timeDATA(1:size(T1, 2));
 plot(timeDATA, T1, 'c', timeDATA, T2, 'y', timeDATA, T3, 'g', timeDATA, T4, 'r', timeDATA, T5, 'm')
 
-hold off
+hold off;
