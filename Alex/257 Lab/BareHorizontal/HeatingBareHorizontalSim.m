@@ -7,10 +7,10 @@ x0 = 0; %Start length (m)
 xf = 0.3; %End length (m)
 
 %Constants
-kc = 14; %Convection coefficient of horizontal Al rod (W/(m^2K))
+kc = 12; %Convection coefficient of horizontal Al rod (W/(m^2K))
 k = 190; %Constant of conductivity of Al (W/(mK))
 a = 0.011; %Radius of the rod (m)
-e = 0.10; %Emmisivity of sandblasted Al rod
+e = 0.21; %Emmisivity of sandblasted Al rod
 SBc = 5.67e-8; %Stefan-Boltzmann constant (W/(m^2K^4))
 Tamb = 273+27; %Ambient temperature (K)
 Cp = 950; %Specific heat capacity of Al (J/(K kg))
