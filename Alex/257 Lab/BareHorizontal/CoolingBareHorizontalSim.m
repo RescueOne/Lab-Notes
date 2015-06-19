@@ -30,7 +30,7 @@ dT = @(P) (P * dt)/(Cp * pi*a^2*dx*rho); %Temperature change in chunk (K)
 %==============
 
 %Constants
-Pinl = 7; %Power into the left side of the rod (W)
+Pinl = 0; %Power into the left side of the rod (W)
 
 %Storage
 T = zeros(Nx, Nt); %Array o temp over time, indices are (x,t)
