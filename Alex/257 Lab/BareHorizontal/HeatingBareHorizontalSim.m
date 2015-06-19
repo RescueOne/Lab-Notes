@@ -1,5 +1,12 @@
+%Constants for fit
+kc = 14; %Convection coefficient of horizontal Al rod (W/(m^2K))
+k = 170; %Constant of conductivity of Al (W/(mK))
+e = 0.1; %Emmisivity of sandblasted Al rod
+Cp = 970; %Specific heat capacity of Al (J/(K kg))
+Pinl = 7; %Power into the left side of the rod (W)
+
 %Number of steps
-Nx = 140; %Number of steps in length
+Nx = 130; %Number of steps in length
 Nt = 100000; %Number of steps in time
 t0 = 0; %Start time (s)
 tf = 2800; %End time (s)
@@ -7,13 +14,9 @@ x0 = 0; %Start length (m)
 xf = 0.3; %End length (m)
 
 %Constants
-kc = 12; %Convection coefficient of horizontal Al rod (W/(m^2K))
-k = 190; %Constant of conductivity of Al (W/(mK))
 a = 0.011; %Radius of the rod (m)
-e = 0.21; %Emmisivity of sandblasted Al rod
 SBc = 5.67e-8; %Stefan-Boltzmann constant (W/(m^2K^4))
 Tamb = 273+27; %Ambient temperature (K)
-Cp = 950; %Specific heat capacity of Al (J/(K kg))
 rho = 2.7e3; %Density of Al (kg/m^3)
 
 %Calculated numbers
@@ -28,9 +31,6 @@ dT = @(P) (P * dt)/(Cp * pi*a^2*dx*rho); %Temperature change in chunk (K)
 %==============
 %= Simulation =
 %==============
-
-%Constants
-Pinl = 7; %Power into the left side of the rod (W)
 
 %Storage
 T = zeros(Nx, Nt); %Array o temp over time, indices are (x,t)
