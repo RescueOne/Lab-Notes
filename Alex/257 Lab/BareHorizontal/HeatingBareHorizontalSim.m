@@ -22,11 +22,14 @@ rho = 2.7e3; %Density of Al (kg/m^3)
 %Calculated numbers
 dx = (xf - x0)/(Nx);
 dt = (tf - t0)/(Nt);
-dT_convec = @(Tx) (kc*2*(Tx-Tamb)*dt)/(Cp*rho*a); %Temperature change due to convection (K)
-dT_rad = @(Tx) (e*SBc*2*(Tx.^4-Tamb^4)*dt)/(Cp*rho*a); %Temperature change due to radiation (K)
+%Temperature change due to convection (K)
+dT_convec = @(Tx) (kc*2*(Tx-Tamb)*dt)/(Cp*rho*a); 
+%Temperature change due to radiation (K)
+dT_rad = @(Tx) (e*SBc*2*(Tx.^4-Tamb^4)*dt)/(Cp*rho*a); 
 dT_convec_end = @(Tx) (kc*(Tx-Tamb)*dt)/(Cp*rho*dx);
 dT_rad_end = @(Tx) (e*SBc*(Tx.^4-Tamb^4)*dt)/(Cp*rho*dx);
-dT = @(P) (P * dt)/(Cp * pi*a^2*dx*rho); %Temperature change in chunk (K)
+%Temperature change in chunk (K)
+dT = @(P) (P * dt)/(Cp * pi*a^2*dx*rho); 
 
 %==============
 %= Simulation =
@@ -40,17 +43,21 @@ T(:,1) = ones(Nx,1)*(273+28); %Set all temperatures to Tamb
 
 for time = 1:Nt-1
     %power in to and conduction out of first slice
-    T(1,time+1)=T(1,time)+dT(Pinl)+((k/(Cp*rho))*(T(2,time)-T(1,time))./dx^2)*dt;
+    T(1,time+1)=T(1,time)+dT(Pinl)+((k/(Cp*rho))*(T(2,time)-...
+      T(1,time))./dx^2)*dt;
     
     %temperature changes due to conduction along rod
-    T(2:Nx-1,time+1)=T(2:Nx-1,time)+(k/(Cp*rho))*((T(3:Nx,time)-2*T(2:Nx-1,time)+T(1:Nx-2,time))./dx^2)*dt;
+    T(2:Nx-1,time+1)=T(2:Nx-1,time)+(k/(Cp*rho))*((T(3:Nx,time)...
+      -2*T(2:Nx-1,time)+T(1:Nx-2,time))./dx^2)*dt;
     T(Nx,time+1) = T(Nx,time)-((k/(Cp*rho))*(T(Nx,time)-T(Nx-1,time))./dx^2)*dt;
     
     %temperature changes due to loss in convection and radiation
-    T(1:Nx,time+1)=T(1:Nx,time+1) - dT_convec(T(1:Nx,time+1)) - dT_rad(T(1:Nx,time+1));
+    T(1:Nx,time+1)=T(1:Nx,time+1) - dT_convec(T(1:Nx,time+1)) -...
+     dT_rad(T(1:Nx,time+1));
     
     %convection and radiation at cold and hot end of rod
-    T(Nx,time+1)=T(Nx,time+1) - dT_convec_end(T(Nx,time+1)) - dT_rad_end(T(Nx,time+1));
+    T(Nx,time+1)=T(Nx,time+1) - dT_convec_end(T(Nx,time+1)) -...
+     dT_rad_end(T(Nx,time+1));
 end
 
 
@@ -84,7 +91,8 @@ plot(timeSim,(T(floor(Nx*2/3),:)-273));
 xlabel('Time (Seconds)');
 ylabel('Temp (C)');
 
-plot(timeDATA, T1, 'c', timeDATA, T2, 'y', timeDATA, T3, 'g', timeDATA, T4, 'r', timeDATA, T5, 'm')
+plot(timeDATA, T1, 'c', timeDATA, T2, 'y', timeDATA, T3, 'g', timeDATA, T4,...
+ 'r', timeDATA, T5, 'm')
 
 % Calculate chai squared values
 X1 = zeros(1,length(timeDATA));
