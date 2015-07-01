@@ -1,9 +1,15 @@
 %Constants for fit
-kc = 13.3; %Convection coefficient of horizontal Al rod (W/(m^2K))
-k = 190; %Constant of conductivity of Al (W/(mK))
-e = 1; %Emmisivity of sandblasted Al rod
-Cp = 857; %Specific heat capacity of Al (J/(K kg))
-Pinl = 9; %Power into the left side of the rod (W)
+kc = 9.7098; %Convection coefficient of horizontal Al rod (W/(m^2K))
+k = 188.1926; %Constant of conductivity of Al (W/(mK))
+e = 0.9772; %Emmisivity of sandblasted Al rod
+Cp = 908.0408; %Specific heat capacity of Al (J/(K kg))
+loss = 0.2121; %Fractional loss of power to environment
+
+%Power
+V = 15.1; %V, voltage into power resistor
+I = 0.68; %A, current into power resistor
+Ppower = V*I %W
+Pinl = Ppower*(1-loss) %Power into the left side of the rod (W)
 
 %Number of steps
 Nx = 140; %Number of steps in length
@@ -118,6 +124,7 @@ Xsquare1 = sum(X1)/length(X1)
 Xsquare2 = sum(X2)/length(X2)
 Xsquare3 = sum(X3)/length(X3)
 Xsquare4 = sum(X4)/length(X4)
-XsquareTot = (Xsquare1^2 + Xsquare2^2 + Xsquare3^2 + Xsquare4^2)/4
+
+(Xsquare1+Xsquare2+Xsquare3+Xsquare4)/4
 
 hold off;
