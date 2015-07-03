@@ -82,27 +82,37 @@ if notTrimmed
     timeDATA = timeDATA(1:length(T1));
 end
 
+% ==============
+% ===PLOTTING===
+% ==============
+
 timeSim = linspace(0,tf,Nt);
 
+figure
+plotRod(timeDATA, T1, T2, T3, T4, T5,...
+        timeSim, (T(Nx,:)-273), (T(floor(Nx*2/3),:)-273) ,(T(floor(Nx/3),:)-273), (T(1,:)-273) );
+
+%%%% OLD PLOTTING CODE %%%%
 % Plot of all points of rod simulation
 % for position = 1:Nx
 %     plot(timeSim,(T(position,:)-273));
 %     hold on;
 % end
 
-plot(timeSim,(T(1,:)-273));
-hold on;
-plot(timeSim,(T(Nx,:)-273));
-plot(timeSim,(T(floor(Nx/3),:)-273));
-plot(timeSim,(T(floor(Nx*2/3),:)-273));
+% plot(timeSim,(T(1,:)-273));
+% hold on;
+% plot(timeSim,(T(Nx,:)-273));
+% plot(timeSim,(T(floor(Nx/3),:)-273));
+% plot(timeSim,(T(floor(Nx*2/3),:)-273));
 
-xlabel('Time (Seconds)');
-ylabel('Temp (C)');
+% xlabel('Time (Seconds)');
+% ylabel('Temp (C)');
 
-plot(timeDATA, T1, 'c', timeDATA, T2, 'y', timeDATA, T3, 'g', timeDATA, T4,...
- 'r', timeDATA, T5, 'm')
+% plot(timeDATA, T1, 'c', timeDATA, T2, 'y', timeDATA, T3, 'g', timeDATA, T4,...
+%  'r', timeDATA, T5, 'm')
 
-% Calculate chai squared values
+
+% Calculate chi squared values
 X1 = zeros(1,length(timeDATA));
 X2 = zeros(1,length(timeDATA));
 X3 = zeros(1,length(timeDATA));
