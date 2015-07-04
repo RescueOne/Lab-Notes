@@ -1,9 +1,10 @@
 %Constants for fit
-kc = 14; %Convection coefficient of horizontal Al rod (W/(m^2K))
-k = 170; %Constant of conductivity of Al (W/(mK))
-e = 0.1; %Emmisivity of sandblasted Al rod
-Cp = 970; %Specific heat capacity of Al (J/(K kg))
-Pinl = 8; %Power into the left side of the rod (W)
+kc = 13; %Convection coefficient of horizontal Al rod (W/(m^2K))
+k = 120; %Constant of conductivity of Al (W/(mK))
+kwet = 19; %Constant to account for wet surface
+e = 0.22; %Emmisivity of sandblasted Al rod
+Cp = 857; %Specific heat capacity of Al (J/(K kg))
+Pinl = 7.8; %Power into the left side of the rod (W)
 
 %Number of steps
 Nx = 140; %Number of steps in length
@@ -16,13 +17,14 @@ xf = 0.3; %End length (m)
 %Constants
 a = 0.011; %Radius of the rod (m)
 SBc = 5.67e-8; %Stefan-Boltzmann constant (W/(m^2K^4))
-Tamb = 273+27; %Ambient temperature (K)
+Tamb = 273+28; %Ambient temperature (K)
 rho = 2.7e3; %Density of Al (kg/m^3)
 
 %Calculated numbers
 dx = (xf - x0)/(Nx);
 dt = (tf - t0)/(Nt);
 dT_convec = @(Tx) (kc*2*(Tx-Tamb)*dt)/(Cp*rho*a); %Temperature change due to convection (K)
+dT_wet = @(Tx) (kwet*2*(Tx-Tamb)*dt)/(Cp*rho*a); %Temperature change approximation due to wet surface (K)
 dT_rad = @(Tx) (e*SBc*2*(Tx.^4-Tamb^4)*dt)/(Cp*rho*a); %Temperature change due to radiation (K)
 dT_convec_end = @(Tx) (kc*(Tx-Tamb)*dt)/(Cp*rho*dx);
 dT_rad_end = @(Tx) (e*SBc*(Tx.^4-Tamb^4)*dt)/(Cp*rho*dx);
@@ -48,6 +50,7 @@ for time = 1:Nt-1
     
     %temperature changes due to loss in convection and radiation
     T(1:Nx,time+1)=T(1:Nx,time+1) - dT_convec(T(1:Nx,time+1)) - dT_rad(T(1:Nx,time+1));
+    T(floor(Nx/3):floor(2*Nx/3), time+1) = T(floor(Nx/3):floor(2*Nx/3), time+1) - dT_wet(T(floor(Nx/3):floor(2*Nx/3), time+1));
     
     %convection and radiation at cold and hot end of rod
     T(Nx,time+1)=T(Nx,time+1) - dT_convec_end(T(Nx,time+1)) - dT_rad_end(T(Nx,time+1));

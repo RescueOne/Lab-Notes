@@ -1,12 +1,12 @@
 %Constants for fit
-kc = 14; %Convection coefficient of horizontal Al rod (W/(m^2K))
-k = 170; %Constant of conductivity of Al (W/(mK))
-e = 0.1; %Emmisivity of sandblasted Al rod
-Cp = 970; %Specific heat capacity of Al (J/(K kg))
+kc = 13.5; %Convection coefficient of horizontal Al rod (W/(m^2K))
+k = 175; %Constant of conductivity of Al (W/(mK))
+e = 0.23; %Emmisivity of sandblasted Al rod
+Cp = 857; %Specific heat capacity of Al (J/(K kg))
 Pinl = 7; %Power into the left side of the rod (W)
 
 %Number of steps
-Nx = 130; %Number of steps in length
+Nx = 140; %Number of steps in length
 Nt = 100000; %Number of steps in time
 t0 = 0; %Start time (s)
 tf = 2800; %End time (s)
@@ -36,7 +36,7 @@ dT = @(P) (P * dt)/(Cp * pi*a^2*dx*rho); %Temperature change in chunk (K)
 T = zeros(Nx, Nt); %Array o temp over time, indices are (x,t)
 
 %initial
-T(:,1) = ones(Nx,1)*(273+28); %Set all temperatures to Tamb
+T(:,1) = ones(Nx,1)*(273+27); %Set all temperatures to Tamb
 
 for time = 1:Nt-1
     %power in to and conduction out of first slice
