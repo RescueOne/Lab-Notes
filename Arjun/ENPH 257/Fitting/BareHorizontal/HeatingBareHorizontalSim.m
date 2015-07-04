@@ -1,12 +1,20 @@
+clc;
+
 %Constants for fit
-kc = 13.5; %Convection coefficient of horizontal Al rod (W/(m^2K))
-k = 175; %Constant of conductivity of Al (W/(mK))
-e = 0.23; %Emmisivity of sandblasted Al rod
-Cp = 857; %Specific heat capacity of Al (J/(K kg))
-Pinl = 7; %Power into the left side of the rod (W)
+kc = 14; %Convection coefficient of horizontal Al rod (W/(m^2K))
+k = 170; %Constant of conductivity of Al (W/(mK))
+e = 0.1; %Emmisivity of sandblasted Al rod
+Cp = 970; %Specific heat capacity of Al (J/(K kg))
+loss = .22; %Fractional loss of power to environment
+
+%Power
+V = 12.5; %V, voltage into power resistor
+I = 0.71; %A, current into power resistor
+Ppower = V*I %W
+Pinl = Ppower*(1-loss) %Power into the left side of the rod (W)
 
 %Number of steps
-Nx = 140; %Number of steps in length
+Nx = 130; %Number of steps in length
 Nt = 100000; %Number of steps in time
 t0 = 0; %Start time (s)
 tf = 2800; %End time (s)
@@ -39,7 +47,7 @@ dT = @(P) (P * dt)/(Cp * pi*a^2*dx*rho);
 T = zeros(Nx, Nt); %Array o temp over time, indices are (x,t)
 
 %initial
-T(:,1) = ones(Nx,1)*(273+27); %Set all temperatures to Tamb
+T(:,1) = ones(Nx,1)*(273+28); %Set all temperatures to Tamb
 
 for time = 1:Nt-1
     %power in to and conduction out of first slice
@@ -74,27 +82,37 @@ if notTrimmed
     timeDATA = timeDATA(1:length(T1));
 end
 
+% ==============
+% ===PLOTTING===
+% ==============
+
 timeSim = linspace(0,tf,Nt);
 
+figure
+plotRod(timeDATA, T1, T2, T3, T4, T5,...
+        timeSim, (T(Nx,:)-273), (T(floor(Nx*2/3),:)-273) ,(T(floor(Nx/3),:)-273), (T(1,:)-273) );
+
+%%%% OLD PLOTTING CODE %%%%
 % Plot of all points of rod simulation
 % for position = 1:Nx
 %     plot(timeSim,(T(position,:)-273));
 %     hold on;
 % end
 
-plot(timeSim,(T(1,:)-273));
-hold on;
-plot(timeSim,(T(Nx,:)-273));
-plot(timeSim,(T(floor(Nx/3),:)-273));
-plot(timeSim,(T(floor(Nx*2/3),:)-273));
+% plot(timeSim,(T(1,:)-273));
+% hold on;
+% plot(timeSim,(T(Nx,:)-273));
+% plot(timeSim,(T(floor(Nx/3),:)-273));
+% plot(timeSim,(T(floor(Nx*2/3),:)-273));
 
-xlabel('Time (Seconds)');
-ylabel('Temp (C)');
+% xlabel('Time (Seconds)');
+% ylabel('Temp (C)');
 
-plot(timeDATA, T1, 'c', timeDATA, T2, 'y', timeDATA, T3, 'g', timeDATA, T4,...
- 'r', timeDATA, T5, 'm')
+% plot(timeDATA, T1, 'c', timeDATA, T2, 'y', timeDATA, T3, 'g', timeDATA, T4,...
+%  'r', timeDATA, T5, 'm')
 
-% Calculate chai squared values
+
+% Calculate chi squared values
 X1 = zeros(1,length(timeDATA));
 X2 = zeros(1,length(timeDATA));
 X3 = zeros(1,length(timeDATA));
@@ -126,6 +144,5 @@ Xsquare1 = sum(X1)/length(X1)
 Xsquare2 = sum(X2)/length(X2)
 Xsquare3 = sum(X3)/length(X3)
 Xsquare4 = sum(X4)/length(X4)
-XsquareTot = (Xsquare1^2 + Xsquare2^2 + Xsquare3^2 + Xsquare4^2)/4
 
 hold off;
