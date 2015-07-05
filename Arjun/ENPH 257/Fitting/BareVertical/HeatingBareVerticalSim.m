@@ -75,22 +75,9 @@ end
 
 timeSim = linspace(0,tf,Nt);
 
-% Plot of all points of rod simulation
-% for position = 1:Nx
-%     plot(timeSim,(T(position,:)-273));
-%     hold on;
-% end
-
-plot(timeSim,(T(1,:)-273));
-hold on;
-plot(timeSim,(T(Nx,:)-273));
-plot(timeSim,(T(floor(Nx/3),:)-273));
-plot(timeSim,(T(floor(Nx*2/3),:)-273));
-
-xlabel('Time (Seconds)');
-ylabel('Temp (C)');
-
-plot(timeDATA, T1, 'c', timeDATA, T2, 'y', timeDATA, T3, 'g', timeDATA, T4, 'r', timeDATA, T5, 'm')
+figure
+plotRod(timeDATA, T1, T2, T3, T4, T5,...
+        timeSim, (T(Nx,:)-273), (T(floor(Nx*2/3),:)-273) ,(T(floor(Nx/3),:)-273), (T(1,:)-273) );
 
 % Calculate chai squared values
 X1 = zeros(1,length(timeDATA));
@@ -120,9 +107,9 @@ for tindex = 1:length(timeDATA)
    X4(tindex) = (TData4-TSim4)^2;
 end
 
-Xsquare1 = sum(X1)/length(X1)
-Xsquare2 = sum(X2)/length(X2)
-Xsquare3 = sum(X3)/length(X3)
-Xsquare4 = sum(X4)/length(X4)
+Xsquare1 = sum(X1)/0.75^2 %Sigma = 0.75
+Xsquare2 = sum(X2)/0.74^2 %Sigma = 0.74
+Xsquare3 = sum(X3)/1.3^2 %Sigma = 1.3
+Xsquare4 = sum(X4)/1.5^2 %Sigma = 1.5
 
 hold off;

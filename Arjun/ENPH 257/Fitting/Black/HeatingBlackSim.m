@@ -1,9 +1,9 @@
 %Constants for fit
-kc = 9.7098; %Convection coefficient of horizontal Al rod (W/(m^2K))
-k = 188.1926; %Constant of conductivity of Al (W/(mK))
-e = 0.9772; %Emmisivity of sandblasted Al rod
-Cp = 908.0408; %Specific heat capacity of Al (J/(K kg))
-loss = 0.2121; %Fractional loss of power to environment
+kc = 14; %Convection coefficient of horizontal Al rod (W/(m^2K))
+k = 190; %Constant of conductivity of Al (W/(mK))
+e = 1; %Emmisivity of sandblasted Al rod
+Cp = 890; %Specific heat capacity of Al (J/(K kg))
+loss = 0.1; %Fractional loss of power to environment
 
 %Power
 V = 15.1; %V, voltage into power resistor
@@ -75,23 +75,10 @@ end
 
 timeSim = linspace(0,tf,Nt);
 
-% Plot of all points of rod simulation
-% for position = 1:Nx
-%     plot(timeSim,(T(position,:)-273));
-%     hold on;
-% end
-
-plot(timeSim,(T(1,:)-273));
-hold on;
-plot(timeSim,(T(Nx,:)-273));
-plot(timeSim,(T(floor(Nx/3),:)-273));
-plot(timeSim,(T(floor(Nx*2/3),:)-273));
-
-xlabel('Time (Seconds)');
-ylabel('Temp (C)');
-
-plot(timeDATA, T1, 'c', timeDATA, T2, 'y', timeDATA, T3, 'g', timeDATA, T4, 'r', timeDATA, T5, 'm')
-
+figure
+plotRod(timeDATA, T1, T2, T3, T4, T5,...
+        timeSim, (T(Nx,:)-273), (T(floor(Nx*2/3),:)-273) ,(T(floor(Nx/3),:)-273), (T(1,:)-273) );
+    
 % Calculate chai squared values
 X1 = zeros(1,length(timeDATA));
 X2 = zeros(1,length(timeDATA));
@@ -125,6 +112,6 @@ Xsquare2 = sum(X2)/length(X2)
 Xsquare3 = sum(X3)/length(X3)
 Xsquare4 = sum(X4)/length(X4)
 
-(Xsquare1+Xsquare2+Xsquare3+Xsquare4)/4
+Xsquaretot = (Xsquare1 + Xsquare2 + Xsquare3 + Xsquare4)/4
 
 hold off;
