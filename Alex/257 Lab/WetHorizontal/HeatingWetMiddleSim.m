@@ -117,10 +117,10 @@ for tindex = 1:length(timeDATA)
    X4(tindex) = (TData4-TSim4)^2;
 end
 
-Xsquare1 = sum(X1)/length(X1)
-Xsquare2 = sum(X2)/length(X2)
-Xsquare3 = sum(X3)/length(X3)
-Xsquare4 = sum(X4)/length(X4)
+Xsquare1 = sum(X1)
+Xsquare2 = sum(X2)
+Xsquare3 = sum(X3)
+Xsquare4 = sum(X4)
 XsquareTot = (Xsquare1^2 + Xsquare2^2 + Xsquare3^2 + Xsquare4^2)/4
 
 hold off;

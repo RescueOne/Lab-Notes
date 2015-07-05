@@ -1,28 +1,30 @@
 %Constants for fit
-kc = 13.5; %Convection coefficient of horizontal Al rod (W/(m^2K))
-k = 175; %Constant of conductivity of Al (W/(mK))
-e = 0.23; %Emmisivity of sandblasted Al rod
+kc = 15; %Convection coefficient of horizontal Al rod (W/(m^2K))
+k = 200; %Constant of conductivity of Al (W/(mK))
+kwet = 10; %Constant to account for wet surface
+e = 0.22; %Emmisivity of sandblasted Al rod
 Cp = 857; %Specific heat capacity of Al (J/(K kg))
-Pinl = 7; %Power into the left side of the rod (W)
+Pinl = 7.8; %Power into the left side of the rod (W)
 
 %Number of steps
 Nx = 140; %Number of steps in length
-Nt = 100000; %Number of steps in time
+Nt = 200000; %Number of steps in time
 t0 = 0; %Start time (s)
-tf = 2250; %End time (s)
+tf = 1300; %End time (s)
 x0 = 0; %Start length (m)
 xf = 0.3; %End length (m)
 
 %Constants
 a = 0.011; %Radius of the rod (m)
 SBc = 5.67e-8; %Stefan-Boltzmann constant (W/(m^2K^4))
-Tamb = 273+27; %Ambient temperature (K)
+Tamb = 273+mean(T5); %Ambient temperature (K)
 rho = 2.7e3; %Density of Al (kg/m^3)
 
 %Calculated numbers
 dx = (xf - x0)/(Nx);
 dt = (tf - t0)/(Nt);
 dT_convec = @(Tx) (kc*2*(Tx-Tamb)*dt)/(Cp*rho*a); %Temperature change due to convection (K)
+dT_wet = @(Tx) (kwet*2*(Tx-Tamb)*dt)/(Cp*rho*a); %Temperature change approximation due to wet surface (K)
 dT_rad = @(Tx) (e*SBc*2*(Tx.^4-Tamb^4)*dt)/(Cp*rho*a); %Temperature change due to radiation (K)
 dT_convec_end = @(Tx) (kc*(Tx-Tamb)*dt)/(Cp*rho*dx);
 dT_rad_end = @(Tx) (e*SBc*(Tx.^4-Tamb^4)*dt)/(Cp*rho*dx);
@@ -36,7 +38,7 @@ dT = @(P) (P * dt)/(Cp * pi*a^2*dx*rho); %Temperature change in chunk (K)
 T = zeros(Nx, Nt); %Array o temp over time, indices are (x,t)
 
 %initial
-T(:,1) = ones(Nx,1)*(273+28); %Set all temperatures to Tamb
+T(:,1) = ones(Nx,1)*(273+29); %Set all temperatures to Tamb
 
 for time = 1:Nt-1
     %power in to and conduction out of first slice
@@ -48,6 +50,7 @@ for time = 1:Nt-1
     
     %temperature changes due to loss in convection and radiation
     T(1:Nx,time+1)=T(1:Nx,time+1) - dT_convec(T(1:Nx,time+1)) - dT_rad(T(1:Nx,time+1));
+    T(1:floor(Nx/3), time+1) = T(1:floor(Nx/3), time+1) - dT_wet(T(1:floor(Nx/3), time+1));
     
     %convection and radiation at cold and hot end of rod
     T(Nx,time+1)=T(Nx,time+1) - dT_convec_end(T(Nx,time+1)) - dT_rad_end(T(Nx,time+1));
@@ -58,7 +61,7 @@ end
 notTrimmed = false; 
 if notTrimmed
     l = length(T1);
-    numTrim = 4;
+    numTrim = 2;
     T1 = T1(numTrim:l);
     T2 = T2(numTrim:l);
     T3 = T3(numTrim:l);
@@ -114,10 +117,10 @@ for tindex = 1:length(timeDATA)
    X4(tindex) = (TData4-TSim4)^2;
 end
 
-Xsquare1 = sum(X1)/length(X1)
-Xsquare2 = sum(X2)/length(X2)
-Xsquare3 = sum(X3)/length(X3)
-Xsquare4 = sum(X4)/length(X4)
+Xsquare1 = sum(X1)
+Xsquare2 = sum(X2)
+Xsquare3 = sum(X3)
+Xsquare4 = sum(X4)
 XsquareTot = (Xsquare1^2 + Xsquare2^2 + Xsquare3^2 + Xsquare4^2)/4
 
 hold off;
