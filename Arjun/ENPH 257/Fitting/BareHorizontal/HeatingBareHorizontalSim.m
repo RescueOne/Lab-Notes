@@ -1,11 +1,11 @@
 clc;
 
 %Constants for fit
-kc = 14; %Convection coefficient of horizontal Al rod (W/(m^2K))
-k = 170; %Constant of conductivity of Al (W/(mK))
-e = 0.1; %Emmisivity of sandblasted Al rod
-Cp = 970; %Specific heat capacity of Al (J/(K kg))
-loss = .22; %Fractional loss of power to environment
+kc = 13.5; %Convection coefficient of horizontal Al rod (W/(m^2K))
+k = 180; %Constant of conductivity of Al (W/(mK))
+e = 0.21; %Emmisivity of sandblasted Al rod
+Cp = 940; %Specific heat capacity of Al (J/(K kg))
+loss = .2; %Fractional loss of power to environment
 
 %Power
 V = 12.5; %V, voltage into power resistor
@@ -24,7 +24,7 @@ xf = 0.3; %End length (m)
 %Constants
 a = 0.011; %Radius of the rod (m)
 SBc = 5.67e-8; %Stefan-Boltzmann constant (W/(m^2K^4))
-Tamb = 273+27; %Ambient temperature (K)
+Tamb = 273 + mean(T5); %Ambient temperature (K)
 rho = 2.7e3; %Density of Al (kg/m^3)
 
 %Calculated numbers
@@ -140,9 +140,9 @@ for tindex = 1:length(timeDATA)
    X4(tindex) = (TData4-TSim4)^2;
 end
 
-Xsquare1 = sum(X1)/length(X1)
-Xsquare2 = sum(X2)/length(X2)
-Xsquare3 = sum(X3)/length(X3)
-Xsquare4 = sum(X4)/length(X4)
+Xsquare1 = sum(X1)%/length(X1)
+Xsquare2 = sum(X2)%/length(X2)
+Xsquare3 = sum(X3)%/length(X3)
+Xsquare4 = sum(X4)%/length(X4)
 
 hold off;

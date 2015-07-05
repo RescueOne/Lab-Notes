@@ -16,7 +16,7 @@ xf = 0.3; %End length (m)
 %Constants
 a = 0.011; %Radius of the rod (m)
 SBc = 5.67e-8; %Stefan-Boltzmann constant (W/(m^2K^4))
-Tamb = 273+27; %Ambient temperature (K)
+Tamb = 273+mean(T5); %Ambient temperature (K)
 rho = 2.7e3; %Density of Al (kg/m^3)
 
 %Calculated numbers

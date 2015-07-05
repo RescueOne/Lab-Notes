@@ -7,16 +7,16 @@ function plotRod( timeData, T1, T2, T3, T4, Tamb, timeSim, T1Sim, T2Sim, T3Sim, 
 	end
 
 	%plot dots for data points
-	plot(timeData, 	T1, 		'y.', ... %Data
-		 timeSim,	T1Sim, 		'y-', ... %Simulation
-		 timeData, 	T2, 		'r.', ... %Data 
-		 timeSim, 	T2Sim, 		'r-', ... %Simulation
-		 timeData,	T3, 		'g.', ... %Data
-		 timeSim,	T3Sim, 		'g-', ... %Simulation
-		 timeData, 	T4, 		'c.', ... %Data
-		 timeSim, 	T4Sim, 		'c-', ... %Simulation
+	plot(timeData, 	T1, 		'c.', ... %Data
+		 timeSim,	T1Sim, 		 ... %Simulation
+		 timeData, 	T2, 		'g.', ... %Data 
+		 timeSim, 	T2Sim, 		 ... %Simulation
+		 timeData,	T3, 		'y.', ... %Data
+		 timeSim,	T3Sim, 		 ... %Simulation
+		 timeData, 	T4, 		'r.', ... %Data
+		 timeSim, 	T4Sim, 		 ... %Simulation
 		 timeData, 	Tamb,		'm.', ... %Data, no simulation for ambient temps
-		 'Markersize', 7)
+		 'Markersize', 7, 'Linewidth', 1.5)
 
 	xlabel('Time (seconds)', 'Fontsize', 14);
 	ylabel('Temperature (Celsius)', 'Fontsize', 14);
@@ -34,5 +34,5 @@ function plotRod( timeData, T1, T2, T3, T4, Tamb, timeSim, T1Sim, T2Sim, T3Sim, 
 	legend(legendLabels , 'Location', 'NorthWest', 'Fontsize', 12);
 	grid on
 	axis([0 inf 20 70]);
-	title('Temparature vs Time at Various Positions', 'Fontsize', 16);
+	title({'Bare Horizonatal Rod Heating', 'Temperature vs. Time at Various Positions'}, 'Fontsize', 16);
 end
