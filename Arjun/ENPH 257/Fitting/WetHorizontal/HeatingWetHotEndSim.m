@@ -75,7 +75,7 @@ end
 
 
 % Point trim for data (to allow for time it takes to heat power resistor)
-notTrimmed = false; 
+notTrimmed = true; 
 if notTrimmed
     l = length(T1);
     numTrim = 6;
@@ -125,9 +125,9 @@ for tindex = 1:length(timeDATA)
    X4(tindex) = (TData4-TSim4)^2;
 end
 
-Xsquare1 = sum(X1)/1.1^2 %Sigma = 1.1
-Xsquare2 = sum(X2)/0.51^2 %Sigma = 0.51
-Xsquare3 = sum(X3)/2.8^2 %Sigma = 2.8
-Xsquare4 = sum(X4)/0.81^2 %Sigma = 0.81
+Xsquare1 = sum(X1)%/1.1^2 %Sigma = 1.1
+Xsquare2 = sum(X2)%/0.51^2 %Sigma = 0.51
+Xsquare3 = sum(X3)%/2.8^2 %Sigma = 2.8
+Xsquare4 = sum(X4)%/0.81^2 %Sigma = 0.81
 
 hold off;
