@@ -1,5 +1,3 @@
-clc;
-
 %Constants for fit
 kc = 13.5; %Convection coefficient of horizontal Al rod (W/(m^2K))
 k = 180; %Constant of conductivity of Al (W/(mK))
@@ -92,26 +90,6 @@ figure
 plotRod(timeDATA, T1, T2, T3, T4, T5,...
         timeSim, (T(Nx,:)-273), (T(floor(Nx*2/3),:)-273) ,(T(floor(Nx/3),:)-273), (T(1,:)-273) );
 
-%%%% OLD PLOTTING CODE %%%%
-% Plot of all points of rod simulation
-% for position = 1:Nx
-%     plot(timeSim,(T(position,:)-273));
-%     hold on;
-% end
-
-% plot(timeSim,(T(1,:)-273));
-% hold on;
-% plot(timeSim,(T(Nx,:)-273));
-% plot(timeSim,(T(floor(Nx/3),:)-273));
-% plot(timeSim,(T(floor(Nx*2/3),:)-273));
-
-% xlabel('Time (Seconds)');
-% ylabel('Temp (C)');
-
-% plot(timeDATA, T1, 'c', timeDATA, T2, 'y', timeDATA, T3, 'g', timeDATA, T4,...
-%  'r', timeDATA, T5, 'm')
-
-
 % Calculate chi squared values
 X1 = zeros(1,length(timeDATA));
 X2 = zeros(1,length(timeDATA));
@@ -140,9 +118,9 @@ for tindex = 1:length(timeDATA)
    X4(tindex) = (TData4-TSim4)^2;
 end
 
-Xsquare1 = sum(X1)%/length(X1)
-Xsquare2 = sum(X2)%/length(X2)
-Xsquare3 = sum(X3)%/length(X3)
-Xsquare4 = sum(X4)%/length(X4)
+Xsquare1 = sum(X1)/0.36^2 %Sigma = 0.36
+Xsquare2 = sum(X2)/0.42^2 %Sigma = 0.42
+Xsquare3 = sum(X3)/1.8^2 %Sigma = 1.8
+Xsquare4 = sum(X4)/0.57^2 %Sigma = 0.57
 
 hold off;
