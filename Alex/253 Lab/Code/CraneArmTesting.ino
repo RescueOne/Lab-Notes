@@ -15,15 +15,18 @@ void setup()
 
 void loop()
 {
-  int KNOB = 6;
-  
-  LCD.setCursor(0,0); LCD.print("ANGLE");
+  int MOTOR = 0;
   
   while (true) {
-    double knob6 = knob(KNOB);
+    double knob6 = knob(6);
+    double knob7 = knob(7);
+    int speedM = (knob6/2.0)-254.5;
     int angle = floor(knob6/(1023/180));
     if (angle >= 180) {angle = 180;}
+    motor.speed(MOTOR, speedM);
     RCServo1.write(angle);
+    LCD.setCursor(0,0); LCD.print("      "); 
+    LCD.setCursor(0,0); LCD.print(speedM);
     LCD.setCursor(0,1); LCD.print("      "); 
     LCD.setCursor(0,1); LCD.print(angle);
   }
